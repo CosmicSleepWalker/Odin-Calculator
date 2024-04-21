@@ -18,7 +18,23 @@ const btn = document.querySelector("#inputs");
 btn.addEventListener("click", (e) => {
     if(e.target.matches('button')){
         let value = e.target.innerHTML;
-        document.querySelector("#user-input").value += value;
+        if(value === 'clear'){
+            document.querySelector("#user-input").value = "";
+        }else{
+            document.querySelector("#user-input").value += value;
+            if(value === '='){
+                const expression = document.querySelector("#user-input").value;
+                calculate(expression);
+            }
+        }
+        
     }
 });
 
+
+const calculate = (expression) => {
+    const valueArr = expression.split("");
+    valueArr.forEach(element => {
+        console.log(element);
+    });
+}
