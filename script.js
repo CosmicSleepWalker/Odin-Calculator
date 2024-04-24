@@ -21,25 +21,44 @@ const btn = document.querySelector("#inputs");
 let firstNum = 0;
 let secondNum = 0;
 let operator = "";
+let total = 0;
 btn.addEventListener("click", (e) => {
     if(e.target.matches('button')){
         let value = e.target.innerHTML;
         if(Number.isInteger(parseInt(value))){
-            document.querySelector("#user-input").value += value;
+            if(operator === ""){
+                firstNum = firstNum * 10 + parseInt(value);
+                document.querySelector("#user-input").value = firstNum;
+            }else{
+                secondNum = secondNum * 10 + parseInt(value);
+                document.querySelector("#user-input").value = secondNum;
+            }
         }else if(value === "+" || value === "-" || value === "/" || value === "*"){
-            firstNum = parseFloat(document.querySelector("#user-input").value);
-            console.log(firstNum);
-            operator = value;
-            document.querySelector("#user-input").value = "";
+            if(operator && secondNum !== ""){
+                total = operate(parseFloat(firstNum), parseFloat(secondNum), operator);
+                document.querySelector("#user-input").value = total;
+                firstNum = total;
+                secondNum = 0;
+            }else if(firstNum !== ""){
+                operator  = value;
+                document.querySelector("#user-input").value = firstNum;
+            }
         }else if(value === "clear"){
             firstNum = 0;
             secondNum = 0;
             operator = "";
+            total = 0;
             document.querySelector("#user-input").value = "";
         }else if(value === "="){
-            secondNum = parseFloat(document.querySelector("#user-input").value);
-            const result = operate(firstNum, secondNum, operator);
-            document.querySelector("#user-input").value = result;
+            if(operator && secondNum !== "") {
+                total = operate(parseFloat(firstNum), parseFloat(secondNum), operator);
+                document.querySelector("#user-input").value = total;
+                firstNum = total;
+                secondNum = 0; 
+                operator = ""
+            }else if(total !== ""){
+                document.querySelector("#user-input").value = total;
+            }
         }
     }
 });
@@ -47,7 +66,6 @@ btn.addEventListener("click", (e) => {
 const operate = (num1, num2, operator) => {
     switch(operator){
         case "/":
-            console.log(num1 + " " + num2 + " " + operator);
             return divide(num1, num2);
         case "*":
             return multiply(num1, num2);
